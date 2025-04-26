@@ -1,10 +1,23 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from database import Database
 from smortPredictor import smortPredictorImplementor
 from os import getenv
 from dotenv import load_dotenv
 from pathlib import Path
+
+import optimize_collection
+from pydantic import BaseModel
+from fastapi import status
+
+class DriverLocationInput(BaseModel):
+    latitude: str
+    longitude: str
+    region_id: int
+
+class OptimizationResponse(BaseModel):
+    status: str
+    message: str
 app = FastAPI()
 
 app.add_middleware(
@@ -97,3 +110,40 @@ async def get_average_trash_levels_all_sensors():
 async def get_average_trash_levels_of_all_sensors_in_region(region_id: int):
     average_trash_levels = await db.get_average_trash_levels_all_sensors_in_region(region_id)
     return average_trash_levels
+
+#prince part 
+
+@app.post("/driverLocation", response_model=OptimizationResponse)
+async def add_driver_location(data: DriverLocationInput):
+    """
+    Input JSON should be like:
+    {
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "region_id": 1
+    }
+
+    Response example:
+    {
+        "status": "400",
+        "message": "https://maps/link/api ............"
+    }
+    """
+    frequency = 24  # hours
+    start_time_string = "2024-01-01 08:00:00"
+
+    collection_origin = f"{data.latitude},{data.longitude}"  # Corrected to use the fields properly
+
+    refered_date_string = "2025-04-26 22:00:00"  # Example 'now'
+    
+    target_region_id = data.region_id  # Region ID comes from request
+    
+    try:
+        link = await optimize_collection.main(frequency, start_time_string, collection_origin, target_region_id, refered_date_string)
+    except Exception as e:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=str(e))
+    
+    return {
+        "status": "200",
+        "message": link
+    }

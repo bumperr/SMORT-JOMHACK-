@@ -113,13 +113,11 @@ async def generate_optimized_route(sensors: List[Dict], origin: str) -> Optional
     final_url = route_optimizer.generate_multi_stop_url(optimized_json, origin)
     return final_url
 
-async def main(
-    frequency_hours: int,
-    start_time_str: str,
-    origin: str,
-    region_id: int,
-    refered_date_str: str
-): 
+async def main(frequency_hours: int,start_time_str: str,origin: str,region_id: int,refered_date_str: str): 
+
+    """
+    wrapper for all process to get the final linke 
+    """
     try:
         start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S")
         refered_date = datetime.strptime(refered_date_str, "%Y-%m-%d %H:%M:%S")
