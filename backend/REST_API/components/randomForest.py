@@ -76,47 +76,47 @@ class SmortML:
 
    
 
-    def predict_full_level(self, threshold=90, max_steps=672) -> Optional[datetime.datetime]:
+    def predict_full_level(self, threshold=95, step_minutes=30) -> dict:
         if self.model is None:
             raise NotFittedError("Model not fitted. Call train_random_forest() first.")
             
         try:
             last_timestamp = self.data['time_stamp'].iloc[-1]
             current_data = self.data.iloc[-1].copy()
-            predictions = []
+            step = 0
             
-            for step in range(max_steps):
-              
+            while True:
+                future_time = last_timestamp + pd.Timedelta(minutes=(step + 1) * step_minutes)
                 features = {
-                    'hour': (last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)).hour,
-                    'day_of_week': (last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)).dayofweek,
-                    'month': (last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)).month,
-                    'is_weekend': int((last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)).dayofweek in [5, 6]),
+                    'hour': future_time.hour,
+                    'day_of_week': future_time.dayofweek,
+                    'month': future_time.month,
+                    'is_weekend': int(future_time.dayofweek in [5, 6]),
                     'lag_1': current_data['trash_level'],
                     'lag_2': current_data['lag_1'],
                     'lag_3': current_data['lag_2']
                 }
                 
-              
                 pred = self.model.predict(pd.DataFrame([features]))[0]
-                predictions.append(pred)
-               
+                
+                # Update lags
                 current_data['lag_3'] = current_data['lag_2']
                 current_data['lag_2'] = current_data['lag_1']
                 current_data['lag_1'] = pred
                 current_data['trash_level'] = pred
                 
-               
+                step += 1  # Move to next step
+                
                 if pred >= threshold:
-                    predicted_time = last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)
                     return {
-                        'predicted_timestamp': predicted_time,
-                        'hours_until_full': (step + 1) * 0.25,  
+                        'predicted_timestamp': future_time,
+                        'hours_until_full': step * (step_minutes / 60),
                         'predicted_level': pred
                     }
-            return None  
+            
         except Exception as e:
             raise ValueError(f"Error predicting full level: {str(e)}")
+
 #-----------------------verification--------------------------------------------
 
     def split_train_test(self, test_size: float = 0.2, random_state: int = 42):
@@ -140,7 +140,8 @@ class SmortML:
             if not hasattr(self, 'X_train') or not hasattr(self, 'y_train'):
                 raise ValueError("Training data not found. Call split_train_test() first.")
             
-            self.model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+            self.model = RandomForestRegressor(n_estimators=250, max_depth=5, min_samples_split=10,min_samples_leaf=10,random_state=42)
             self.model.fit(self.X_train, self.y_train)
             print("Random Forest model trained successfully.")
         except Exception as e:

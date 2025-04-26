@@ -38,6 +38,7 @@
     "nuxt-lodash": "2.5.3",
     "nuxt-mapbox": "1.6.2",
     "nuxt-vuefire": "1.0.5",
+    "package.json": "^2.0.1",
     "pinia": "^3.0.1",
     "radix-vue": "^1.9.13",
     "shadcn-nuxt": "0.11.3",

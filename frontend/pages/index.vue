@@ -13,7 +13,7 @@ const regionId = ref(1);
 const id = useId();
 
 const { data: bins, refresh: binRefresh } = await useFetch(
-  () => `http://172.104.185.250/region/${regionId.value}/sensors`,
+  () => `https://smort-thrasher-backend-1063382714333.asia-southeast1.run.app/region/city/${regionID}/with-sensors`,
 );
 
 // const {

@@ -25,15 +25,11 @@ import { storeToRefs } from "pinia";
 const data = {
   projects: [
     {
-      name: "Invent for the Planet Hackathon 2025",
+      name: "JomHack Varsity Challenge 2025",
       url: "#",
       icon: Globe,
     },
-    {
-      name: "Petrobots Hackathon 2025",
-      url: "#",
-      icon: Bot,
-    },
+   
   ],
 };
 

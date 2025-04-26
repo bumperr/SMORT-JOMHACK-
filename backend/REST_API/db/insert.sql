@@ -29,6 +29,12 @@ INSERT INTO region_sensor (region_ID, sensor_ID) VALUES
 (3, 8),
 (3, 9);
 
+
+--------------------------------
+---DONT USE THIS OLD VERSION  USE CONTROLLED_INSERT.SQL--
+
+
+-----------------------------------
 INSERT INTO sensor_record (smort_ID, time_stamp, trash_level, image) VALUES ('1', '2024-02-14 07:00:00', 6, '');
 INSERT INTO sensor_record (smort_ID, time_stamp, trash_level, image) VALUES ('1', '2024-02-14 07:15:00', 24, '');
 INSERT INTO sensor_record (smort_ID, time_stamp, trash_level, image) VALUES ('1', '2024-02-14 07:30:00', 44, '');
