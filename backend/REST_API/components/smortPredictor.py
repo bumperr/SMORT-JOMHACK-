@@ -3,8 +3,10 @@ import joblib
 import pandas as pd
 import os
 from typing import Dict
-from components.database import Database
-
+from database import  Database
+from dotenv import load_dotenv
+from pathlib import Path
+import asyncio 
 
 class SmortPredictor:
     def __init__(self, model_dir: str, sensor_ids: list):
@@ -18,6 +20,7 @@ class SmortPredictor:
         for sensor_id in self.sensors:
             model_path = os.path.join(
                 self.model_dir, f"sensor_{sensor_id}_model.joblib")
+            #print(f"model path: {model_path} loaded")
             if os.path.exists(model_path):
                 models[sensor_id] = joblib.load(model_path)
             else:
@@ -64,12 +67,18 @@ class SmortPredictor:
 
 
 class smortPredictorImplementor:
-    def __init__(self, model_directory="../ML-model", sensor_ids=[1, 2, 3, 4, 5, 6, 7, 8, 9]):
+    def __init__(self, model_directory=None, sensor_ids=[1, 2, 3, 4, 5, 6, 7, 8, 9]):
+        if model_directory is None:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            model_directory = os.path.abspath(os.path.join(base_dir, '..', 'ML-model'))
+
         self.model_directory = model_directory
         self.sensor_ids = sensor_ids
         self.predictor = SmortPredictor(self.model_directory, self.sensor_ids)
 
     async def predict_full_level(self, sensor_id: int):
+        env_path = Path(__file__).resolve().parents[3] / '.env'
+        load_dotenv(dotenv_path=env_path)
         db = Database(os.getenv("DB_HOST"), os.getenv("DB_PORT"), os.getenv(
             "DB_USER"), os.getenv("DB_PASSWORD"), os.getenv("DB_NAME"))
 
@@ -97,7 +106,7 @@ if __name__ == "__main__":
     obj = smortPredictorImplementor()
     sensor_id = 9
 
-    full_prediction = obj.predict_full_level(sensor_id)
+    full_prediction = asyncio.run (obj.predict_full_level(sensor_id))
 
     if full_prediction:
         print(

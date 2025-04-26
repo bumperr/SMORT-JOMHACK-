@@ -1,10 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from components.database import Database
-from components.smortPredictor import smortPredictorImplementor
+from database import Database
+from smortPredictor import smortPredictorImplementor
 from os import getenv
 from dotenv import load_dotenv
-
+from pathlib import Path
 app = FastAPI()
 
 app.add_middleware(
@@ -14,8 +14,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+env_path = Path(__file__).resolve().parents[3] / '.env'
+load_dotenv(dotenv_path=env_path)
 
-load_dotenv()
 
 db = Database(getenv("DB_HOST"), getenv("DB_PORT"), getenv(
     "DB_USER"), getenv("DB_PASSWORD"), getenv("DB_NAME"))
@@ -74,7 +75,7 @@ async def create_sensor_record(sensor_data: dict):
 
 @app.get("/predict/{sensor_id}")
 async def predict(sensor_id: int):
-    predictor = smortPredictorImplementor(model_directory="./ML-model")
+    predictor = smortPredictorImplementor(model_directory=None)
     prediction = await predictor.predict_full_level(sensor_id)
 
     return prediction

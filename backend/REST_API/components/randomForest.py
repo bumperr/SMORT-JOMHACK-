@@ -14,7 +14,9 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import r2_score 
 import joblib
 import os
-
+from dotenv import load_dotenv
+from pathlib import Path
+import asyncio 
 class SmortML:
     def __init__(self, data: List[Tuple[int, datetime.datetime, Decimal]]):
         self.data = self.convert_data_to_df(data)
@@ -183,16 +185,24 @@ class SmortML:
             print(f"Mean MAE: {mean_mae:.2f}")
             print(f"Standard Deviation: {std_mae:.2f}")
 
-            return mean_mae, std_mae  # ✅ Added return statement
+            return mean_mae, std_mae  # Added return statement
         except Exception as e:
             raise ValueError(f"Error performing k-fold cross-validation: {str(e)}")
 
     
 
 if __name__ == "__main__":
-    sensor=9
-    db = Database()
-    data = db.get_partial_sensor_record(sensor)
+    env_path = Path(__file__).resolve().parents[3] / '.env'
+    load_dotenv(dotenv_path=env_path)
+   
+    sensor=7
+
+
+ 
+    db = Database(os.getenv("DB_HOST"), os.getenv("DB_PORT"), os.getenv(
+        "DB_USER"), os.getenv("DB_PASSWORD"), os.getenv("DB_NAME"))
+    
+    data = asyncio.run(db.get_partial_sensor_record(sensor))
     model = SmortML(data)
     model.clean_data()
     model.extract_features()

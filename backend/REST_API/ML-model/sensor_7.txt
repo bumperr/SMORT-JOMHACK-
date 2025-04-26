@@ -1,0 +1,13 @@
+Training set size: 536
+Testing set size: 134
+Random Forest model trained successfully.
+Test Set Evaluation:
+MAE: 6.65
+RMSE: 8.95
+R²: 0.91
+K-Fold Cross-Validation Results (k=5):
+Mean MAE: 6.87
+Standard Deviation: 0.99
+Trash will be full at: 2024-02-21 08:00:00
+Hours until full: 1.0
+Predicted level: 94.80%
