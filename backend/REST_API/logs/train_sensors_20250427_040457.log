@@ -1,0 +1,6 @@
+2025-04-27 04:04:57,185 - INFO - Logging started. Output file: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\logs\train_sensors_20250427_040457.log
+2025-04-27 04:04:57,235 - INFO - 
+=== Training Sensor 1 ===
+2025-04-27 04:04:59,074 - INFO - [Sensor 1] MAE: 3.14, RMSE: 9.31, R²: 0.92
+2025-04-27 04:05:07,674 - INFO - [Sensor 1] K-Fold Mean MAE: 2.12, Standard Deviation: 0.22
+2025-04-27 04:05:24,337 - INFO - Database connection closed.

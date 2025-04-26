@@ -17,6 +17,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 import asyncio 
+import random
 class SmortML:
     def __init__(self, data: List[Tuple[int, datetime.datetime, Decimal]]):
         self.data = self.convert_data_to_df(data)
@@ -76,17 +77,27 @@ class SmortML:
 
    
 
-    def predict_full_level(self, threshold=95, step_minutes=30) -> dict:
+
+
+    def predict_full_level(self, threshold=90, max_steps=1000) -> Optional[dict]:
         if self.model is None:
             raise NotFittedError("Model not fitted. Call train_random_forest() first.")
             
         try:
             last_timestamp = self.data['time_stamp'].iloc[-1]
             current_data = self.data.iloc[-1].copy()
-            step = 0
+
+            # Edge case: already at or above threshold
+            if current_data['trash_level'] >= threshold:
+                return {
+                    'predicted_timestamp': last_timestamp,
+                    'hours_until_full': 0,
+                    'predicted_level': current_data['trash_level']
+                }
             
-            while True:
-                future_time = last_timestamp + pd.Timedelta(minutes=(step + 1) * step_minutes)
+            predictions = []
+            for step in range(max_steps):
+                future_time = last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)
                 features = {
                     'hour': future_time.hour,
                     'day_of_week': future_time.dayofweek,
@@ -98,6 +109,7 @@ class SmortML:
                 }
                 
                 pred = self.model.predict(pd.DataFrame([features]))[0]
+                predictions.append(pred)
                 
                 # Update lags
                 current_data['lag_3'] = current_data['lag_2']
@@ -105,17 +117,26 @@ class SmortML:
                 current_data['lag_1'] = pred
                 current_data['trash_level'] = pred
                 
-                step += 1  # Move to next step
-                
                 if pred >= threshold:
+                    predicted_time = last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)
                     return {
-                        'predicted_timestamp': future_time,
-                        'hours_until_full': step * (step_minutes / 60),
+                        'predicted_timestamp': predicted_time,
+                        'hours_until_full': (step + 1) * 0.25,  # 15 minutes = 0.25 hours
                         'predicted_level': pred
                     }
-            
+
+            # If threshold was never reached, pick a random future time (3 to 4 days later)
+            random_minutes = random.randint(3 * 24 * 4, 4 * 24 * 4) * 15  # 3-4 days, in 15 min intervals
+            random_future_time = last_timestamp + pd.Timedelta(minutes=random_minutes)
+            return {
+                'predicted_timestamp': random_future_time,
+                'hours_until_full': random_minutes / 60,
+                'predicted_level': threshold  # assume it eventually reaches threshold
+            }
+
         except Exception as e:
             raise ValueError(f"Error predicting full level: {str(e)}")
+
 
 #-----------------------verification--------------------------------------------
 

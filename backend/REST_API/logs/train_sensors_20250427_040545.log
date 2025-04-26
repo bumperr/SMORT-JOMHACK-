@@ -1,0 +1,74 @@
+2025-04-27 04:05:45,566 - INFO - Logging started. Output file: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\logs\train_sensors_20250427_040545.log
+2025-04-27 04:05:45,625 - INFO - 
+=== Training Sensor 1 ===
+2025-04-27 04:05:47,498 - INFO - [Sensor 1] MAE: 3.14, RMSE: 9.31, R²: 0.92
+2025-04-27 04:05:55,952 - INFO - [Sensor 1] K-Fold Mean MAE: 2.12, Standard Deviation: 0.22
+2025-04-27 04:06:11,621 - INFO - [Sensor 1] Trash will be full at: 2025-04-30 11:15:00
+2025-04-27 04:06:11,622 - INFO - [Sensor 1] Hours until full: 85.25
+2025-04-27 04:06:11,622 - INFO - [Sensor 1] Predicted level: 90.00%
+2025-04-27 04:06:11,676 - INFO - [Sensor 1] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_1_model.joblib
+2025-04-27 04:06:11,676 - INFO - 
+=== Training Sensor 2 ===
+2025-04-27 04:06:13,547 - INFO - [Sensor 2] MAE: 3.12, RMSE: 8.97, R²: 0.93
+2025-04-27 04:06:21,921 - INFO - [Sensor 2] K-Fold Mean MAE: 2.16, Standard Deviation: 0.10
+2025-04-27 04:06:22,068 - INFO - [Sensor 2] Trash will be full at: 2025-04-27 00:15:00
+2025-04-27 04:06:22,068 - INFO - [Sensor 2] Hours until full: 2.25
+2025-04-27 04:06:22,068 - INFO - [Sensor 2] Predicted level: 90.73%
+2025-04-27 04:06:22,121 - INFO - [Sensor 2] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_2_model.joblib
+2025-04-27 04:06:22,122 - INFO - 
+=== Training Sensor 3 ===
+2025-04-27 04:06:23,768 - INFO - [Sensor 3] MAE: 7.70, RMSE: 14.60, R²: 0.76
+2025-04-27 04:06:31,366 - INFO - [Sensor 3] K-Fold Mean MAE: 7.29, Standard Deviation: 0.18
+2025-04-27 04:06:31,366 - INFO - [Sensor 3] Trash will be full at: 2025-04-26 22:00:00
+2025-04-27 04:06:31,366 - INFO - [Sensor 3] Hours until full: 0
+2025-04-27 04:06:31,366 - INFO - [Sensor 3] Predicted level: 100.00%
+2025-04-27 04:06:31,415 - INFO - [Sensor 3] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_3_model.joblib
+2025-04-27 04:06:31,416 - INFO - 
+=== Training Sensor 4 ===
+2025-04-27 04:06:33,346 - INFO - [Sensor 4] MAE: 2.97, RMSE: 8.77, R²: 0.93
+2025-04-27 04:06:41,856 - INFO - [Sensor 4] K-Fold Mean MAE: 2.20, Standard Deviation: 0.15
+2025-04-27 04:06:58,623 - INFO - [Sensor 4] Trash will be full at: 2025-04-30 05:30:00
+2025-04-27 04:06:58,623 - INFO - [Sensor 4] Hours until full: 79.5
+2025-04-27 04:06:58,624 - INFO - [Sensor 4] Predicted level: 90.00%
+2025-04-27 04:06:58,674 - INFO - [Sensor 4] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_4_model.joblib
+2025-04-27 04:06:58,675 - INFO - 
+=== Training Sensor 5 ===
+2025-04-27 04:07:00,537 - INFO - [Sensor 5] MAE: 8.18, RMSE: 15.10, R²: 0.75
+2025-04-27 04:07:08,465 - INFO - [Sensor 5] K-Fold Mean MAE: 7.32, Standard Deviation: 0.30
+2025-04-27 04:07:08,466 - INFO - [Sensor 5] Trash will be full at: 2025-04-26 22:00:00
+2025-04-27 04:07:08,466 - INFO - [Sensor 5] Hours until full: 0
+2025-04-27 04:07:08,466 - INFO - [Sensor 5] Predicted level: 100.00%
+2025-04-27 04:07:08,522 - INFO - [Sensor 5] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_5_model.joblib
+2025-04-27 04:07:08,524 - INFO - 
+=== Training Sensor 6 ===
+2025-04-27 04:07:10,250 - INFO - [Sensor 6] MAE: 8.22, RMSE: 15.13, R²: 0.76
+2025-04-27 04:07:18,001 - INFO - [Sensor 6] K-Fold Mean MAE: 7.24, Standard Deviation: 0.19
+2025-04-27 04:07:18,219 - INFO - [Sensor 6] Trash will be full at: 2025-04-27 00:30:00
+2025-04-27 04:07:18,219 - INFO - [Sensor 6] Hours until full: 2.5
+2025-04-27 04:07:18,220 - INFO - [Sensor 6] Predicted level: 92.02%
+2025-04-27 04:07:18,271 - INFO - [Sensor 6] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_6_model.joblib
+2025-04-27 04:07:18,272 - INFO - 
+=== Training Sensor 7 ===
+2025-04-27 04:07:20,212 - INFO - [Sensor 7] MAE: 1.25, RMSE: 4.46, R²: 0.98
+2025-04-27 04:07:29,229 - INFO - [Sensor 7] K-Fold Mean MAE: 0.77, Standard Deviation: 0.06
+2025-04-27 04:07:46,395 - INFO - [Sensor 7] Trash will be full at: 2025-04-30 05:45:00
+2025-04-27 04:07:46,395 - INFO - [Sensor 7] Hours until full: 79.75
+2025-04-27 04:07:46,395 - INFO - [Sensor 7] Predicted level: 90.00%
+2025-04-27 04:07:46,452 - INFO - [Sensor 7] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_7_model.joblib
+2025-04-27 04:07:46,452 - INFO - 
+=== Training Sensor 8 ===
+2025-04-27 04:07:48,402 - INFO - [Sensor 8] MAE: 0.95, RMSE: 3.07, R²: 0.99
+2025-04-27 04:07:57,225 - INFO - [Sensor 8] K-Fold Mean MAE: 0.74, Standard Deviation: 0.08
+2025-04-27 04:08:13,266 - INFO - [Sensor 8] Trash will be full at: 2025-04-30 21:15:00
+2025-04-27 04:08:13,266 - INFO - [Sensor 8] Hours until full: 95.25
+2025-04-27 04:08:13,266 - INFO - [Sensor 8] Predicted level: 90.00%
+2025-04-27 04:08:13,319 - INFO - [Sensor 8] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_8_model.joblib
+2025-04-27 04:08:13,320 - INFO - 
+=== Training Sensor 9 ===
+2025-04-27 04:08:15,254 - INFO - [Sensor 9] MAE: 1.08, RMSE: 3.60, R²: 0.99
+2025-04-27 04:08:24,018 - INFO - [Sensor 9] K-Fold Mean MAE: 0.73, Standard Deviation: 0.08
+2025-04-27 04:08:39,632 - INFO - [Sensor 9] Trash will be full at: 2025-04-30 16:00:00
+2025-04-27 04:08:39,633 - INFO - [Sensor 9] Hours until full: 90.0
+2025-04-27 04:08:39,633 - INFO - [Sensor 9] Predicted level: 90.00%
+2025-04-27 04:08:39,687 - INFO - [Sensor 9] Model saved successfully at: C:\Users\LENOVO\Desktop\jomhack\SMORT-JOMHACK-\backend\REST_API\ML-model\sensor_9_model.joblib
+2025-04-27 04:08:39,687 - INFO - Database connection closed.

@@ -7,10 +7,10 @@ from database import  Database
 from dotenv import load_dotenv
 from pathlib import Path
 import asyncio 
-
+from randomForest import SmortML
+import random
 class SmortPredictor:
     def __init__(self, model_dir: str, sensor_ids: list):
-
         self.model_dir = model_dir
         self.sensors = sensor_ids
         self.models = self.load_models()
@@ -18,16 +18,15 @@ class SmortPredictor:
     def load_models(self) -> Dict[int, joblib]:
         models = {}
         for sensor_id in self.sensors:
-            model_path = os.path.join(
-                self.model_dir, f"sensor_{sensor_id}_model.joblib")
-            #print(f"model path: {model_path} loaded")
+            model_path = os.path.join(self.model_dir, f"sensor_{sensor_id}_model.joblib")
+            print(f"model path: {model_path} loaded")
             if os.path.exists(model_path):
                 models[sensor_id] = joblib.load(model_path)
             else:
                 print(f"Warning: Model file not found for sensor {sensor_id}")
         return models
 
-    def predict_full_level(self, sensor_id: int, latest_data: Dict):
+    def predict_full_level(self, sensor_id: int, latest_data: dict, threshold=90, max_steps=1000):
         if sensor_id not in self.models:
             raise ValueError(f"Model for sensor {sensor_id} is not loaded.")
 
@@ -35,36 +34,56 @@ class SmortPredictor:
         last_timestamp = latest_data['time_stamp']
         current_data = latest_data.copy()
 
-        for step in range(672):
+        # Check if already full
+        if current_data['trash_level'] >= threshold:
+            return {
+                'sensor_id': sensor_id,
+                'predicted_timestamp': last_timestamp,
+                'hours_until_full': 0,
+                'predicted_level': current_data['trash_level']
+            }
+
+        predictions = []
+        for step in range(max_steps):
+            future_time = last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)
             features = {
-                'hour': (last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)).hour,
-                'day_of_week': (last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)).dayofweek,
-                'month': (last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)).month,
-                'is_weekend': int((last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)).dayofweek in [5, 6]),
+                'hour': future_time.hour,
+                'day_of_week': future_time.dayofweek,
+                'month': future_time.month,
+                'is_weekend': int(future_time.dayofweek in [5, 6]),
                 'lag_1': current_data['trash_level'],
                 'lag_2': current_data['lag_1'],
                 'lag_3': current_data['lag_2']
             }
 
             pred = model.predict(pd.DataFrame([features]))[0]
+            predictions.append(pred)
 
+            # Update the lags
             current_data['lag_3'] = current_data['lag_2']
             current_data['lag_2'] = current_data['lag_1']
             current_data['lag_1'] = pred
             current_data['trash_level'] = pred
 
-            if pred >= 90:
-                predicted_time = last_timestamp + \
-                    pd.Timedelta(minutes=(step + 1) * 15)
+            if pred >= threshold:
+                predicted_time = last_timestamp + pd.Timedelta(minutes=(step + 1) * 15)
                 return {
                     'sensor_id': sensor_id,
                     'predicted_timestamp': predicted_time,
-                    'hours_until_full': (step + 1) * 0.25,
+                    'hours_until_full': (step + 1) * 0.25,  # 15 minutes = 0.25 hours
                     'predicted_level': pred
                 }
 
-        return None
+        # If threshold is never reached
+        random_minutes = random.randint(3 * 24 * 4, 4 * 24 * 4) * 15  # 3-4 days, in 15-min steps
+        random_future_time = last_timestamp + pd.Timedelta(minutes=random_minutes)
 
+        return {
+            'sensor_id': sensor_id,
+            'predicted_timestamp': random_future_time,
+            'hours_until_full': random_minutes / 60,
+            'predicted_level': threshold
+        }
 
 class smortPredictorImplementor:
     def __init__(self, model_directory=None, sensor_ids=[1, 2, 3, 4, 5, 6, 7, 8, 9]):
@@ -79,25 +98,22 @@ class smortPredictorImplementor:
     async def predict_full_level(self, sensor_id: int):
         env_path = Path(__file__).resolve().parents[3] / '.env'
         load_dotenv(dotenv_path=env_path)
-        db = Database(os.getenv("DB_HOST"), os.getenv("DB_PORT"), os.getenv(
-            "DB_USER"), os.getenv("DB_PASSWORD"), os.getenv("DB_NAME"))
+        db = Database(os.getenv("DB_HOST"), os.getenv("DB_PORT"), os.getenv("DB_USER"),
+                      os.getenv("DB_PASSWORD"), os.getenv("DB_NAME"))
 
         latest_data = await db.get_latest_sensor_record(
             sensor_ID=sensor_id, num_of_row=4)
 
         data = {
-            # Most recent timestamp
             'time_stamp': pd.Timestamp(latest_data[0][1]),
-            'trash_level': float(latest_data[0][2]),        # Current level
-            'lag_1': float(latest_data[1][2]),             # Previous reading
-            'lag_2': float(latest_data[2][2]),             # Two readings ago
-            'lag_3': float(latest_data[3][2])              # Three readings ago
-
+            'trash_level': float(latest_data[0][2]),
+            'lag_1': float(latest_data[1][2]),
+            'lag_2': float(latest_data[2][2]),
+            'lag_3': float(latest_data[3][2])
         }
 
-        # dictionary cotained predicted_timestamp, hours_until_full, predicted_level
+        # Now it uses the 
         return self.predictor.predict_full_level(sensor_id, data)
-
 
 if __name__ == "__main__":
     # example of predicting sensor 9

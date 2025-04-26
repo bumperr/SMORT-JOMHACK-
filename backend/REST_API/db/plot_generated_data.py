@@ -94,9 +94,9 @@ if __name__ == "__main__":
     
     # Convert SQL to DataFrame
     df = sql_to_dataframe(sql_file)
-    
+    df.to_csv('sensor_data.csv', index=False)
     # Plot the data
-    plot_sensor_data(df)
+    #plot_sensor_data(df)
     
     # Optional: Save the DataFrame for further analysis
     df.to_csv('sensor_data.csv', index=False)

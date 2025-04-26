@@ -40,7 +40,7 @@ async def train_sensor(sensor_id: int, db: Database, model_save_path: str):
     model.extract_features()
     model.split_train_test(test_size=0.2)
     model.train_random_forest()
-    #log for model evaluation
+    #log for 
     mae, rmse, r2 = model.evaluate_model()
     logging.info(f"[Sensor {sensor_id}] MAE: {mae:.2f}, RMSE: {rmse:.2f}, R²: {r2:.2f}")
     
